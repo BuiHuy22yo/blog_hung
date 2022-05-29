@@ -1,0 +1,18 @@
+.header-inner {
+  @extend .d-flex;
+  @extend .align-items-center;
+  @extend .justify-content-sb;
+  .header_main_right{
+    @extend .d-flex;
+    @extend .align-items-center;
+  }
+  @import "component/logo";
+  @import "component/search";
+  @import "component/user";
+  @import "component/cart";
+  @import "component/toggle";
+  @import "component/currency";
+  @import "component/mult_languages";
+}
+@import "component/menu_desktop";
+@import "component/menu_mobile";

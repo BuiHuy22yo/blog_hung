@@ -1,0 +1,24 @@
+%dropdowMenuNone {
+	 opacity: 0;
+	 visibility: hidden;
+	 position: absolute;
+	 border-radius: 4px;
+	 padding: 20px;
+	 box-shadow: $box-shadow;
+	 transition: $transition;
+	 transform: translateY(20px);
+}
+%dropdowMenuShow {
+	opacity: 1;
+	visibility: visible;
+	transition: $transition;
+	transform: translateY(0);
+}
+%removeStyleUl {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+%textCenter {
+	text-align: center;
+}

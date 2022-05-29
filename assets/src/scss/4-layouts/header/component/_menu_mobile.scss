@@ -1,0 +1,56 @@
+.wrapNavMobile {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: $color-white;
+  box-shadow: $box-shadow;
+  transition: $transition;
+  transform: translateX(-105%);
+  min-width: 200px;
+  z-index: 2;
+  overflow-y: scroll;
+  &.show {
+    transition: $transition;
+    transform: translateX(0);
+  }
+  ul {
+    @include resetList;
+    .dropdown-menu {
+      max-height: 0;
+      transition: max-height 0.3s ease-out;
+      overflow: hidden;
+    }
+  }
+  padding: 20px 17px;
+  .menu {
+    & > .nav-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #F0F0F0;
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+
+    .nav-link {
+      @extend .text-uppercase;
+      @include fontBase(13px, 16px);
+      @extend .d-flex;
+      @extend .justify-content-sb;
+      @extend .align-items-center;
+      color: $color-primary;
+    }
+
+    .dropdown {
+      .dropdown-menu {
+        padding-left: 15px;
+        .nav-item {
+          padding: 10px 0;
+        }
+      }
+    }
+  }
+  .arrow {
+    margin-right: 3px;
+  }
+}
