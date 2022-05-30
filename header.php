@@ -16,6 +16,8 @@
 </head>
 <body <?php body_class('theme_custom') ?>>
     <?php
+        do_action('ctwp_header_top');
+
         do_action('before_header');
 
         do_action('ctwp_header');

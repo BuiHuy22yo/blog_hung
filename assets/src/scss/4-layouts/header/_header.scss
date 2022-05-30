@@ -2,6 +2,7 @@
   @extend .d-flex;
   @extend .align-items-center;
   @extend .justify-content-sb;
+  padding: 15px 0;
   .header_main_right{
     @extend .d-flex;
     @extend .align-items-center;
@@ -14,5 +15,12 @@
   @import "component/currency";
   @import "component/mult_languages";
 }
+.header-inner-top {
+}
 @import "component/menu_desktop";
 @import "component/menu_mobile";
+
+.header-top
+{
+  background: $color-bg-header-top;
+}

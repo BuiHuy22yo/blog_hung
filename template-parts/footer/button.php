@@ -1,4 +1,4 @@
 <?php
-$text ='Back To Top';
+$text ='';
 $link = '#';
 ctwp_button($text,$link);

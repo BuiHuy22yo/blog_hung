@@ -33,14 +33,21 @@ class Assets
 
 	public function register_styles()
 	{
-		wp_enqueue_style( 'cct-style', CTWP_BUILD_URI . '/css/main.css', array(), false, "all" );
+        // CTWP_LIBRARY
+        wp_enqueue_style( 'bootstrap-style', CTWP_LIBRARY . '/bootstrap/bootstrap.min.css', array(), '5.0.2' );
+        // CTWP_STYLE
+		wp_enqueue_style( 'cct-style', CTWP_BUILD_URI . '/css/main.css', array(), false, 'all' );
 	}
 
 	public function register_scripts()
 	{
+        // CTWP_LIBRARY
+        wp_enqueue_style( 'bootstrap-script', CTWP_LIBRARY . '/bootstrap/bootstrap.min.js', array(), '5.0.2' );
+        // CTWP_SCRIPT
 	    wp_enqueue_script( 'main-script', CTWP_BUILD_URI . '/js/main.js', array( 'jquery' ), false, true );
         wp_localize_script( 'main-script', 'main_script', array(
 		 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		 	) );
+
 	}
 }

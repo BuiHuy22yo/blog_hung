@@ -44,10 +44,10 @@ class Footer {
 	}
 
 	public function footer_main() {
-		get_template_part('template-parts/footer/nav');
-		get_template_part('template-parts/footer/nav_left_right');
-		get_template_part('template-parts/footer/logo');
-		get_template_part('template-parts/footer/button');
+//		get_template_part('template-parts/footer/nav');
+//		get_template_part('template-parts/footer/nav_left_right');
+//		get_template_part('template-parts/footer/logo');
+//		get_template_part('template-parts/footer/button');
 //		get_template_part('template-parts/footer/cart');
 //		get_template_part('template-parts/footer/toggle');
 	}
