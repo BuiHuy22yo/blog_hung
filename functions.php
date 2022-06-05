@@ -27,6 +27,7 @@ require_once CTWP_DIR_PATH . '/inc/helpers/acf-config.php';
 require_once CTWP_DIR_PATH . '/inc/helpers/resize.php';
 require_once CTWP_DIR_PATH . '/inc/helpers/components.php';
 require_once CTWP_DIR_PATH . '/inc/helpers/nav.php';
+require_once CTWP_DIR_PATH . '/inc/helpers/helpers.php';
 function ctwp_get_theme_instance() {
     \CTWP_THEME\Inc\CTWP_THEME::get_instance();
 }

@@ -36,7 +36,7 @@ class Assets
         // CTWP_LIBRARY
         wp_enqueue_style( 'bootstrap-style', CTWP_LIBRARY . '/bootstrap/bootstrap.min.css', array(), '5.0.2' );
         // CTWP_STYLE
-		wp_enqueue_style( 'cct-style', CTWP_BUILD_URI . '/css/main.css', array(), false, 'all' );
+		wp_enqueue_style( 'main-style', CTWP_BUILD_URI . '/css/main.css', array(), false, 'all' );
 	}
 
 	public function register_scripts()
