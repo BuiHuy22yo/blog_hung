@@ -1,4 +1,4 @@
-// all page 
+// all page
 body {
 	font-family: "Roboto", sans-serif;
 	font-style: normal;
@@ -10,5 +10,13 @@ body {
 	padding: 0;
 	border: 0;
 }
+ ul, li {
+	 margin: 0;
+	 padding: 0;
+	 border: 0;
+ }
+ li{
+	 list-style: none;
+ }
 
 
