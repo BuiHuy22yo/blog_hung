@@ -62,4 +62,27 @@ if (!function_exists('ctwpGetAllToppicByForum')) {
         }
         return $data;
     }
+
 }
+
+
+if (!function_exists('ctwp_ajax_get_topic_by_forum')) {
+    function ctwp_ajax_get_topic_by_forum()
+    {
+        if($_POST){
+            $id = $_POST['id'];
+            $page = $_POST['page'];
+            if($id && $page) {
+                $data = ctwpGetAllToppicByForum(array($id),$page );
+            }
+        }
+        if($data){
+            ?>
+            <div class="123">1234567890</div>
+<?php
+            die();
+        }
+    }
+}
+add_action('wp_ajax_ctwp_ajax_get_topic_by_forum', 'ctwp_ajax_get_topic_by_forum');
+add_action('wp_ajax_nopriv_ctwp_ajax_get_topic_by_forum', 'ctwp_ajax_get_topic_by_forum');

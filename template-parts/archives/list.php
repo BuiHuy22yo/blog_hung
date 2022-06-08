@@ -14,12 +14,12 @@ $forums = ctwpGetAllForum(['title']);
 ?>
 
 <div class="col-3">
-    <div class="list-forum">
+    <div class="list-forum pt-2">
         <?php if ($forums) { ?>
             <?php
             foreach ($forums as $id => $forum) { ?>
-                <div class="item-wrap">
-                    <input type="checkbox" id="checkmate-<?php echo $id ?>" name="checkmate">
+                <div class="item-wrap pt-2">
+                    <input type="checkbox" id="checkmate-<?php echo $id ?>" name="checkmate" value="<?php echo $id?>">
                     <label for="checkmate-<?php echo $id ?>"> <?php echo $forum ?></label><br>
                 </div>
             <?php } ?>
@@ -29,16 +29,44 @@ $forums = ctwpGetAllForum(['title']);
 <div class="col-9">
     <div class="archive-post-list">
         <?php if ($topics) { ?>
-            <article <?php post_class('post-post '); ?>>
+            <article <?php post_class('post-post border border-color-white'); ?>>
+                <div class="col-inner border-b border-color-white py-2">
+                    <div class="inner-item row ">
+                        <div class="col-9 topic-title text-center">Topics</div>
+                        <div class="col-3 topic-reply text-center">Last reply</div>
+                    </div>
+                </div>
                 <?php foreach ($topics as $topic) { ?>
-                    <div class="col-inner">
-                        <div class="inner-item">
-                            <div class="topic-title">
-                                <a class="link-title" href="<?php echo get_the_permalink($topic->ID) ?>">
-                                    <?php echo get_the_title($topic->ID) ?>
-                                </a>
+                    <div class="col-inner border-b border-color-white py-2">
+                        <div class="inner-item row ">
+                            <div class="col-9 topic d-flex">
+                                <div class="topic-image ctwp-mw-50 mx-2">
+                                    <img class="w-100" src="http://localhost:8080/blog_hung/wp-content/uploads/2022/06/peter_morales-wallpaper-1024x1024-1.jpg"
+                                         alt="">
+                                </div>
+                                <div class="topic-info flex-grow-1">
+                                    <div class="topic-title">
+                                        <a class="link-title" href="<?php echo get_the_permalink($topic->ID) ?>">
+                                            <span class="text-title"><?php echo get_the_title($topic->ID) ?></span>
+                                        </a>
+                                    </div>
+                                    <div class="topic-create-date"><?php echo get_the_date('d/m/Y', $topic->ID) ?></div>
+                                </div>
+                                <div class="cmt">
+                                    <i class="fa-solid fa-comments"></i>
+                                    <span class="count">5</span>
+                                </div>
                             </div>
-                            <div class="topic-date"><?php echo get_the_date('d/m/Y', $topic->ID)?></div>
+                            <div class="col-3 author-reply d-flex">
+                                <div class="author-image ctwp-mw-40">
+                                    <img class="w-100" src="http://localhost:8080/blog_hung/wp-content/uploads/2022/06/peter_morales-wallpaper-1024x1024-1.jpg"
+                                         alt="">
+                                </div>
+                                <div class="author-info px-2">
+                                    <div class="author-name">mcnb02</div>
+                                    <div class="author-date">01/01/2020</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 <?php } ?>

@@ -35,6 +35,7 @@ class Assets
 	{
         // CTWP_LIBRARY
         wp_enqueue_style( 'bootstrap-style', CTWP_LIBRARY . '/bootstrap/bootstrap.min.css', array(), '5.0.2' );
+        wp_enqueue_style( 'fontawesome-style', CTWP_LIBRARY . '/fontawesome-611/css/all.css', array(), '6.1.1', "all" );
         // CTWP_STYLE
 		wp_enqueue_style( 'main-style', CTWP_BUILD_URI . '/css/main.css', array(), false, 'all' );
 	}
@@ -45,7 +46,7 @@ class Assets
         wp_enqueue_style( 'bootstrap-script', CTWP_LIBRARY . '/bootstrap/bootstrap.min.js', array(), '5.0.2' );
         // CTWP_SCRIPT
 	    wp_enqueue_script( 'main-script', CTWP_BUILD_URI . '/js/main.js', array( 'jquery' ), false, true );
-        wp_localize_script( 'main-script', 'main_script', array(
+        wp_localize_script( 'main-script', 'ctwp_script', array(
 		 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		 	) );
 

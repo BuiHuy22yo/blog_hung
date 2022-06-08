@@ -3,4 +3,4 @@ import "./../scss/main.scss";
 
 // js
 import "./layouts/header";
-// import "./layouts/post";
+import "./layouts/post";
