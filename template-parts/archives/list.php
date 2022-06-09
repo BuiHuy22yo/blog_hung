@@ -11,15 +11,18 @@ $topics = !empty($data) && array_key_exists('data', $data) ? $data['data'] : [];
 $max_page = !empty($data) && array_key_exists('max_page', $data) ? $data['max_page'] : 0;
 $current_page = !empty($data) && array_key_exists('current_page', $data) ? $data['current_page'] : 0;
 $forums = ctwpGetAllForum(['title']);
+$idForums = ctwpGetForumNew();
+$idForums = array_shift($idForums);
+
 ?>
 
 <div class="col-3">
     <div class="list-forum pt-2">
         <?php if ($forums) { ?>
             <?php
-            foreach ($forums as $id => $forum) { ?>
+            foreach ($forums as $id => $forum) {?>
                 <div class="item-wrap pt-2">
-                    <input type="checkbox" id="checkmate-<?php echo $id ?>" name="checkmate" value="<?php echo $id?>">
+                    <input type="checkbox" id="checkmate-<?php echo $id ?>" name="checkmate" value="<?php echo $id?>" <?php  echo $idForums == $id ? 'checked' : ''; ?> >
                     <label for="checkmate-<?php echo $id ?>"> <?php echo $forum ?></label><br>
                 </div>
             <?php } ?>
@@ -29,15 +32,15 @@ $forums = ctwpGetAllForum(['title']);
 <div class="col-9">
     <div class="archive-post-list">
         <?php if ($topics) { ?>
-            <article <?php post_class('post-post border border-color-white'); ?>>
-                <div class="col-inner border-b border-color-white py-2">
+            <article <?php post_class('post-forum border border-color-white'); ?>>
+                <div class="col-inner inner-head border-b border-color-white py-2">
                     <div class="inner-item row ">
                         <div class="col-9 topic-title text-center">Topics</div>
                         <div class="col-3 topic-reply text-center">Last reply</div>
                     </div>
                 </div>
                 <?php foreach ($topics as $topic) { ?>
-                    <div class="col-inner border-b border-color-white py-2">
+                    <div class="col-inner inner-body border-b border-color-white py-2">
                         <div class="inner-item row ">
                             <div class="col-9 topic d-flex">
                                 <div class="topic-image ctwp-mw-50 mx-2">

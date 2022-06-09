@@ -1,6 +1,6 @@
 <?php
 ?>
-<main id="primary" class="site-main mb-4">
+<main id="primary" class="site-main my-4">
     <div class="page-content">
         <div class="container">
             <div class="row">

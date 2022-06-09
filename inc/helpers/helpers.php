@@ -14,6 +14,7 @@ if (!function_exists('ctwpGetAllForum')) {
             'post_status' => 'publish',
             'orderby' => 'date',
             'order' => 'DESC',
+            'posts_per_page' => -1,
         ];
         $query = new WP_Query($args);
         if ($query->have_posts()) {
@@ -33,11 +34,34 @@ if (!function_exists('ctwpGetAllForum')) {
     }
 }
 
+if (!function_exists('ctwpGetForumNew')) {
+    function ctwpGetForumNew()
+    {
+        $data = array();
+        $args = [
+            'post_type' => 'forum',
+            'post_status' => 'publish',
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'posts_per_page' => 1,
+        ];
+        $query = new WP_Query($args);
+
+        if ($query->have_posts()) {
+            while ($query->have_posts()) : $query->the_post();
+                $data[] = get_the_id();
+            endwhile;
+            wp_reset_postdata();
+        }
+        return $data;
+    }
+}
+
 if (!function_exists('ctwpGetAllToppicByForum')) {
     function ctwpGetAllToppicByForum($forumId = array(), $current_page = 1)
     {
         $data = array();
-        $forumId = !empty($forumId) ? $forumId : ctwpGetAllForum(['id']);
+        $forumId = !empty($forumId) ? $forumId : ctwpGetForumNew();
         $current_page = !empty($current_page) ? $current_page : 1;
         $posts_per_page = get_option('posts_per_page') ? get_option('posts_per_page') : -1;
         $args = [
@@ -65,21 +89,56 @@ if (!function_exists('ctwpGetAllToppicByForum')) {
 
 }
 
-
 if (!function_exists('ctwp_ajax_get_topic_by_forum')) {
     function ctwp_ajax_get_topic_by_forum()
     {
-        if($_POST){
+        if ($_POST) {
             $id = $_POST['id'];
             $page = $_POST['page'];
-            if($id && $page) {
-                $data = ctwpGetAllToppicByForum(array($id),$page );
+            if ($id && $page) {
+                $data = ctwpGetAllToppicByForum(array($id), $page);
             }
         }
-        if($data){
-            ?>
-            <div class="123">1234567890</div>
-<?php
+        if ($data) {
+            $topics = !empty($data) && array_key_exists('data', $data) ? $data['data'] : [];
+            if ($topics) { ?>
+                <?php foreach ($topics as $topic) { ?>
+                    <div class="col-inner inner-body border-b border-color-white py-2">
+                        <div class="inner-item row ">
+                            <div class="col-9 topic d-flex">
+                                <div class="topic-image ctwp-mw-50 mx-2">
+                                    <img class="w-100"
+                                         src="http://localhost:8080/blog_hung/wp-content/uploads/2022/06/peter_morales-wallpaper-1024x1024-1.jpg"
+                                         alt="">
+                                </div>
+                                <div class="topic-info flex-grow-1">
+                                    <div class="topic-title">
+                                        <a class="link-title" href="<?php echo get_the_permalink($topic->ID) ?>">
+                                            <span class="text-title"><?php echo get_the_title($topic->ID) ?></span>
+                                        </a>
+                                    </div>
+                                    <div class="topic-create-date"><?php echo get_the_date('d/m/Y', $topic->ID) ?></div>
+                                </div>
+                                <div class="cmt">
+                                    <i class="fa-solid fa-comments"></i>
+                                    <span class="count">5</span>
+                                </div>
+                            </div>
+                            <div class="col-3 author-reply d-flex">
+                                <div class="author-image ctwp-mw-40">
+                                    <img class="w-100"
+                                         src="http://localhost:8080/blog_hung/wp-content/uploads/2022/06/peter_morales-wallpaper-1024x1024-1.jpg"
+                                         alt="">
+                                </div>
+                                <div class="author-info px-2">
+                                    <div class="author-name">mcnb02</div>
+                                    <div class="author-date">01/01/2020</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+            <?php }
             die();
         }
     }
