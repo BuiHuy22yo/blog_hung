@@ -13,10 +13,12 @@ $current_page = !empty($data) && array_key_exists('current_page', $data) ? $data
 $forums = ctwpGetAllForum(['title']);
 $idForums = ctwpGetForumNew();
 $idForums = array_shift($idForums);
-
+echo '<pre>';
+print_r(get_avatar_url(1));
+echo '</pre>';
 ?>
 
-<div class="col-3">
+<div class="col-3" xmlns="http://www.w3.org/1999/html">
     <div class="list-forum pt-2">
         <?php if ($forums) { ?>
             <?php
@@ -32,7 +34,7 @@ $idForums = array_shift($idForums);
 <div class="col-9">
     <div class="archive-post-list">
         <?php if ($topics) { ?>
-            <article <?php post_class('post-forum border border-color-white'); ?>>
+            <article <?php post_class('post-forum-topic border border-color-white'); ?>>
                 <div class="col-inner inner-head border-b border-color-white py-2">
                     <div class="inner-item row ">
                         <div class="col-9 topic-title text-center">Topics</div>
@@ -53,7 +55,10 @@ $idForums = array_shift($idForums);
                                             <span class="text-title"><?php echo get_the_title($topic->ID) ?></span>
                                         </a>
                                     </div>
-                                    <div class="topic-create-date"><?php echo get_the_date('d/m/Y', $topic->ID) ?></div>
+                                    <div class="topic-info-inner d-flex">
+                                        <div class="topic-author-name"><span>Author: </span><?php echo get_the_author_meta('display_name', $topic->post_author);?></span></div>
+                                        <div class="topic-create-date"><span>Create at: </span><?php echo get_the_date('d/m/Y', $topic->ID) ?></div>
+                                    </div>
                                 </div>
                                 <div class="cmt">
                                     <i class="fa-solid fa-comments"></i>

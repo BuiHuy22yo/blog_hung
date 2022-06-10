@@ -34,7 +34,7 @@
 						// $('.post-forum').removeClass('loading');
 						setTimeout(function() {
 							$('.inner-body').remove();
-							$('body').find('.post-forum').append(data)
+							$('body').find('.post-forum-topic').append(data)
 						}, 500);
 						$('body').scrollTop(0)
                     }

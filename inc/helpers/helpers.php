@@ -117,7 +117,10 @@ if (!function_exists('ctwp_ajax_get_topic_by_forum')) {
                                             <span class="text-title"><?php echo get_the_title($topic->ID) ?></span>
                                         </a>
                                     </div>
-                                    <div class="topic-create-date"><?php echo get_the_date('d/m/Y', $topic->ID) ?></div>
+                                    <div class="topic-info-inner d-flex">
+                                        <div class="topic-author-name"><span>Author: </span><?php echo get_the_author_meta('display_name', $topic->post_author);?></span></div>
+                                        <div class="topic-create-date"><span>Create at: </span><?php echo get_the_date('d/m/Y', $topic->ID) ?></div>
+                                    </div>
                                 </div>
                                 <div class="cmt">
                                     <i class="fa-solid fa-comments"></i>
