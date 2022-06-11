@@ -57,8 +57,8 @@ if (!function_exists('ctwpGetForumNew')) {
     }
 }
 
-if (!function_exists('ctwpGetAllToppicByForum')) {
-    function ctwpGetAllToppicByForum($forumId = array(), $current_page = 1)
+if (!function_exists('ctwpGetAllTopicByForum')) {
+    function ctwpGetAllTopicByForum($forumId = array(), $current_page = 1)
     {
         $data = array();
         $forumId = !empty($forumId) ? $forumId : ctwpGetForumNew();
@@ -86,7 +86,6 @@ if (!function_exists('ctwpGetAllToppicByForum')) {
         }
         return $data;
     }
-
 }
 
 if (!function_exists('ctwp_ajax_get_topic_by_forum')) {
@@ -96,7 +95,7 @@ if (!function_exists('ctwp_ajax_get_topic_by_forum')) {
             $id = $_POST['id'];
             $page = $_POST['page'];
             if ($id && $page) {
-                $data = ctwpGetAllToppicByForum(array($id), $page);
+                $data = ctwpGetAllTopicByForum(array($id), $page);
             }
         }
         if ($data) {

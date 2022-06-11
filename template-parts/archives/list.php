@@ -6,19 +6,17 @@
  */
 ?>
 <?php
-$data = ctwpGetAllToppicByForum();
+$data = ctwpGetAllTopicByForum();
 $topics = !empty($data) && array_key_exists('data', $data) ? $data['data'] : [];
 $max_page = !empty($data) && array_key_exists('max_page', $data) ? $data['max_page'] : 0;
 $current_page = !empty($data) && array_key_exists('current_page', $data) ? $data['current_page'] : 0;
 $forums = ctwpGetAllForum(['title']);
 $idForums = ctwpGetForumNew();
 $idForums = array_shift($idForums);
-echo '<pre>';
-print_r(get_avatar_url(1));
-echo '</pre>';
+
 ?>
 
-<div class="col-3" xmlns="http://www.w3.org/1999/html">
+<div class="col-3" >
     <div class="list-forum pt-2">
         <?php if ($forums) { ?>
             <?php
@@ -46,8 +44,7 @@ echo '</pre>';
                         <div class="inner-item row ">
                             <div class="col-9 topic d-flex">
                                 <div class="topic-image ctwp-mw-50 mx-2">
-                                    <img class="w-100" src="http://localhost:8080/blog_hung/wp-content/uploads/2022/06/peter_morales-wallpaper-1024x1024-1.jpg"
-                                         alt="">
+                                    <img class="w-100" src="<?php echo get_avatar_url($topic->post_author)?>" alt="">
                                 </div>
                                 <div class="topic-info flex-grow-1">
                                     <div class="topic-title">
@@ -56,7 +53,7 @@ echo '</pre>';
                                         </a>
                                     </div>
                                     <div class="topic-info-inner d-flex">
-                                        <div class="topic-author-name"><span>Author: </span><?php echo get_the_author_meta('display_name', $topic->post_author);?></span></div>
+                                        <div class="topic-author-name me-2"><span>Author: </span><?php echo get_the_author_meta('display_name', $topic->post_author);?></span></div>
                                         <div class="topic-create-date"><span>Create at: </span><?php echo get_the_date('d/m/Y', $topic->ID) ?></div>
                                     </div>
                                 </div>
@@ -67,8 +64,7 @@ echo '</pre>';
                             </div>
                             <div class="col-3 author-reply d-flex">
                                 <div class="author-image ctwp-mw-40">
-                                    <img class="w-100" src="http://localhost:8080/blog_hung/wp-content/uploads/2022/06/peter_morales-wallpaper-1024x1024-1.jpg"
-                                         alt="">
+                                    <img class="w-100" src="<?php echo get_avatar_url($topic->post_author)?>" alt="">
                                 </div>
                                 <div class="author-info px-2">
                                     <div class="author-name">mcnb02</div>
