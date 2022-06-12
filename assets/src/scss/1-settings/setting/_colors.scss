@@ -8,3 +8,14 @@ $color-primary: #333333;
 $color-bg-header-top: #D9D9D9;
 $bg-breadcrumb :#eee;
 $text-breadcrumb :#999;
+$color-primary-text:#050505;
+$color-primary-icon:#050505;
+
+
+
+.color-primary-text {
+  color: $color-primary-text;
+}
+.color-primary-icon {
+  color: $color-primary-icon;
+}

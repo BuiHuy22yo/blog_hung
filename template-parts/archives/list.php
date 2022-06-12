@@ -58,7 +58,7 @@ $idForums = array_shift($idForums);
                                     </div>
                                 </div>
                                 <div class="cmt">
-                                    <i class="fa-solid fa-comments"></i>
+                                    <i class="fa-regular fa-comment"></i>
                                     <span class="count">5</span>
                                 </div>
                             </div>
