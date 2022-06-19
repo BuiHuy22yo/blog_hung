@@ -30,6 +30,10 @@ require_once CTWP_DIR_PATH . '/inc/helpers/nav.php';
 require_once CTWP_DIR_PATH . '/inc/helpers/helpers.php';
 require_once CTWP_DIR_PATH . '/inc/helpers/breadcrumb.php';
 require_once CTWP_DIR_PATH . '/inc/helpers/banner.php';
+
+//
+require_once CTWP_DIR_PATH . '/template-parts/global/module/recent_post.php';
+
 function ctwp_get_theme_instance() {
     \CTWP_THEME\Inc\CTWP_THEME::get_instance();
 }

@@ -17,7 +17,8 @@ $post_author = get_post_field('post_author', $idTopic);
                     <div class="topic-author-name me-2">
                         <span>Author: </span><?php echo get_the_author_meta('display_name', $post_author); ?></span>
                     </div>
-                    <div class="topic-create-date"><span>Create at: </span><?php echo get_the_date('H:i d/m/Y', $idTopic) ?>
+                    <div class="topic-create-date">
+                        <span>Create at: </span><?php echo get_the_date('H:i d/m/Y', $idTopic) ?>
                     </div>
                 </div>
                 <div class="topic-description mt-2"><?php echo get_the_content($idTopic) ?></div>
@@ -30,15 +31,17 @@ $post_author = get_post_field('post_author', $idTopic);
         </div>
         <div class="topic-comment">
             <div class="topic-image ctwp-mw-50 mx-2">
-<!--                <img class="w-100" src="--><?php //echo get_avatar_url($post_author) ?><!--" alt="">-->
+                <!--                <img class="w-100" src="-->
+                <?php //echo get_avatar_url($post_author) ?><!--" alt="">-->
             </div>
 
         </div>
     </div>
 </div>
 <div class="col-3">
-    <div class="">
-        recent topic
+    <div class="inner ">
+        <div class="text-capitalize text-center py-2">recent topic</div>
+        <?php ctwpGetRecentTopic_html($idTopic) ?>
     </div>
 </div>
 
