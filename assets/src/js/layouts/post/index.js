@@ -6,6 +6,8 @@
 
         initializePost() {
             this.checkforum();
+            this.handleComment();
+            this.handleAddComment();
         }
 
         checkforum() {
@@ -41,6 +43,20 @@
                 });
             });
         }
+
+        handleComment() {
+            $('body').on('click', '.button-comment', function (e) {
+                e.preventDefault();
+                console.log('test comment')
+        });
+        }
+        handleAddComment() {
+            $('body').on('change', '.add-comment', function (e) {
+                e.preventDefault();
+                console.log('test comment')
+            });
+        }
+
     }
 
     new PostForum();

@@ -1,0 +1,19 @@
+.input-inner {
+
+}
+.input-item {
+  background: $color-hover-button;
+  color: $color-primary-icon;
+  border-radius: 18px;
+  height: 40px;
+  line-height: 40px;
+  padding: 8px 12px;
+  border: none;
+}
+.input-item:focus {
+  margin: 0;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
