@@ -48,12 +48,40 @@
             $('body').on('click', '.button-comment', function (e) {
                 e.preventDefault();
                 console.log('test comment')
-        });
+            });
         }
+
         handleAddComment() {
-            $('body').on('change', '.add-comment', function (e) {
+            $('body').on('click', '.add-comment', function (e) {
                 e.preventDefault();
-                console.log('test comment')
+                let content = $(this).parent().find('#content').val()
+                let id_user = $('body').find('#id_user').val()
+                let id_topic = $('body').find('#id_topic').val()
+                if(!content && !id_user && !id_topic){
+                    return
+                }
+
+                let data = {
+                    'action': 'ctwp_ajax_create_comment',
+                    'id': id_user,
+                    'content': content,
+                    'id_topic': id_topic
+                };
+                $.ajax({
+                    url: ctwp_script.ajax_url,
+                    data: data,
+                    dataType: 'text',
+                    type: 'POST',
+                    beforeSend: function (xhr) {
+                        // $('.post-forum').addClass('loading');
+                    },
+                    success: function (data) {
+                        // $('.post-forum').removeClass('loading');
+                        $(this).parent().find('#content').val('')
+                        console.log('sucsess ', data)
+                    }
+                });
+                console.log('content comment', content)
             });
         }
 

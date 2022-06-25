@@ -111,6 +111,38 @@ if (!function_exists('ctwpGetRecentTopic')) {
     }
 }
 
+if (!function_exists('ctwpIsLogin')) {
+    function ctwpIsLogin()
+    {
+        $id_user = get_current_user_id();
+        if(!$id_user){
+            echo 'false';
+            return false;
+        }
+        return true;
+    }
+}
+
+if (!function_exists('ctwpGetCurrentUserId')) {
+    function ctwpGetCurrentUserId()
+    {
+        $id_user = get_current_user_id();
+        return !empty($id_user) ? $id_user : '';
+    }
+}
+
+if (!function_exists('ctwpGetForumByTopicId')) {
+    function ctwpGetForumByTopicId($id_topic = '')
+    {
+
+        $id_forum = wp_get_post_parent_id($id_topic);
+        if(!$id_topic){
+            return false;
+        }
+        return $id_forum;
+    }
+}
+
 if (!function_exists('ctwp_ajax_get_topic_by_forum')) {
     function ctwp_ajax_get_topic_by_forum()
     {
@@ -169,5 +201,47 @@ if (!function_exists('ctwp_ajax_get_topic_by_forum')) {
     }
     add_action('wp_ajax_ctwp_ajax_get_topic_by_forum', 'ctwp_ajax_get_topic_by_forum');
     add_action('wp_ajax_nopriv_ctwp_ajax_get_topic_by_forum', 'ctwp_ajax_get_topic_by_forum');
+}
+
+if (!function_exists('ctwp_ajax_create_comment')) {
+    function ctwp_ajax_create_comment()
+    {
+        try {
+            if (!$_POST) {
+                return false;
+            }
+            $id_user = $_POST['id'];
+            $content = $_POST['content'];
+            $id_topic = $_POST['id_topic'];
+            if (!$id_user && !$content && !$id_topic) {
+                return false;
+            }
+            $ars = [
+                'post_type' => 'reply',
+                'post_status' => 'publish',
+                'post_title' => 'Reply_',
+                'post_content' => $content,
+                'post_author' => $id_user,
+                'post_parent' => $id_topic,
+            ];
+            $id = wp_insert_post($ars);
+            $id_forum = ctwpGetForumByTopicId($id_topic);
+            add_post_meta($id, '_bbp_forum_id', $id_forum);
+            add_post_meta($id, '_bbp_topic_id', $id_topic);
+            add_post_meta($id, '_bbp_author_ip', $id_user);
+            if (!empty($reply_to)) {
+                add_post_meta($id, '_bbp_reply_to', $reply_to);
+            }
+
+            echo json_encode(1);
+            exit;
+        } catch (Exception $e) {
+            echo json_encode(0);
+            exit;
+        }
+    }
+
+    add_action('wp_ajax_ctwp_ajax_create_comment', 'ctwp_ajax_create_comment');
+    add_action('wp_ajax_nopriv_ctwp_ajax_create_comment', 'ctwp_ajax_create_comment');
 }
 
