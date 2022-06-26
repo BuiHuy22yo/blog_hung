@@ -92,7 +92,9 @@ if (!function_exists('ctwpGetRecentTopic')) {
     function ctwpGetRecentTopic($id = '')
     {
         $data = array();
-        if(!$id){return $data;}
+        if (!$id) {
+            return $data;
+        }
         $id = array($id);
         $args = [
             'post_type' => 'topic',
@@ -115,7 +117,7 @@ if (!function_exists('ctwpIsLogin')) {
     function ctwpIsLogin()
     {
         $id_user = get_current_user_id();
-        if(!$id_user){
+        if (!$id_user) {
             echo 'false';
             return false;
         }
@@ -136,10 +138,102 @@ if (!function_exists('ctwpGetForumByTopicId')) {
     {
 
         $id_forum = wp_get_post_parent_id($id_topic);
-        if(!$id_topic){
+        if (!$id_topic) {
             return false;
         }
         return $id_forum;
+    }
+}
+
+if (!function_exists('ctwpGetCommentChild')) {
+    function ctwpGetCommentChild($id_topic = '', $id_parent = '')
+    {
+        $data = array();
+        if (!$id_topic && !$id_parent) {
+            return false;
+        }
+        $args = [
+            'post_type' => 'reply',
+            'post_status' => 'publish',
+            'post_parent' => $id_topic,
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'posts_per_page' => -1,
+            'meta_key' => '_bbp_reply_to',
+            'meta_value' => $id_parent,
+            'meta_compare' => '=',
+        ];
+        $query = new WP_Query($args);
+        if ($query->have_posts()) {
+            $data = $query->posts;
+            wp_reset_postdata();
+        }
+        return $data;
+    }
+}
+
+if (!function_exists('ctwpGetComment')) {
+    function ctwpGetComment($id_topic = '')
+    {
+        $data = array();
+        if (!$id_topic) {
+            return false;
+        }
+        $args = [
+            'post_type' => 'reply',
+            'post_status' => 'publish',
+            'post_parent' => $id_topic,
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'posts_per_page' => -1,
+
+        ];
+        $query = new WP_Query($args);
+        $item = $data['data'];
+        if ($query->have_posts()) {
+            foreach ($query->posts as $post) {
+                if (empty($post->ID)) {
+                    $item[] = '';
+                }
+                $id = $post->ID;
+                $id_parent = get_post_meta($id, '_bbp_reply_to', true);
+
+                if (empty($id_parent)) {
+                    $post->comment_child = ctwpGetCommentChild($id_topic, $id) ? ctwpGetCommentChild($id_topic, $id) : [];
+                    $item[] = $post;
+                }
+            }
+            $data['data'] = $item;
+            wp_reset_postdata();
+        }
+        return $data;
+    }
+}
+
+if (!function_exists('ctwpGetAddComment_html')) {
+    function ctwpGetAddComment_html($id_topic = '')
+    {
+        $html = '';
+        if (!$id_topic) {
+            return false;
+        }
+        $post_author = get_post_field('post_author', $id_topic);
+        $is_login = ctwpIsLogin();
+        $addclass = $is_login ? 'add-comment' : 'is-logout';
+
+
+        $html .= '<div class="user-avatar ctwp-mw-40 me-2">';
+        $html .= '<img class="rounded-circle w-100 " src="' . get_avatar_url($post_author) . '" alt="">';
+        $html .= '</div>';
+        $html .= '<div class="content-comment w-100 input-inner d-flex align-items-center">';
+        $html .= '<input type="text" id="content" class="input-item w-100 me-2" placeholder="Write a comment...">';
+        $html .= '<input type="hidden" id="id_user" value="' . ctwpGetCurrentUserId() . '">';
+        $html .= '<input type="hidden" id="id_topic" value="' . $id_topic . '">';
+        $html .= '<div class="button ' . $addclass . ' ctwp-mw-40 ctwp-width-40 text-center bg-primary text-white rounded-circle py-2">';
+        $html .= '<i class="fa-solid fa-location-arrow rotate-45"></i>';
+        $html .= '</div>';
+        $html .= ' </div>';
+        return $html;
     }
 }
 
@@ -172,8 +266,12 @@ if (!function_exists('ctwp_ajax_get_topic_by_forum')) {
                                         </a>
                                     </div>
                                     <div class="topic-info-inner d-flex">
-                                        <div class="topic-author-name"><span>Author: </span><?php echo get_the_author_meta('display_name', $topic->post_author);?></span></div>
-                                        <div class="topic-create-date"><span>Create at: </span><?php echo get_the_date('d/m/Y', $topic->ID) ?></div>
+                                        <div class="topic-author-name">
+                                            <span>Author: </span><?php echo get_the_author_meta('display_name', $topic->post_author); ?></span>
+                                        </div>
+                                        <div class="topic-create-date">
+                                            <span>Create at: </span><?php echo get_the_date('d/m/Y', $topic->ID) ?>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="cmt">
@@ -199,6 +297,7 @@ if (!function_exists('ctwp_ajax_get_topic_by_forum')) {
             die();
         }
     }
+
     add_action('wp_ajax_ctwp_ajax_get_topic_by_forum', 'ctwp_ajax_get_topic_by_forum');
     add_action('wp_ajax_nopriv_ctwp_ajax_get_topic_by_forum', 'ctwp_ajax_get_topic_by_forum');
 }
@@ -213,13 +312,14 @@ if (!function_exists('ctwp_ajax_create_comment')) {
             $id_user = $_POST['id'];
             $content = $_POST['content'];
             $id_topic = $_POST['id_topic'];
-            if (!$id_user && !$content && !$id_topic) {
+            if (!$id_user || !$content || !$id_topic) {
                 return false;
             }
+            $title_reply = get_the_title($id_topic) ? get_the_title($id_topic) : '';
             $ars = [
                 'post_type' => 'reply',
                 'post_status' => 'publish',
-                'post_title' => 'Reply_',
+                'post_title' => 'Reply_' . $title_reply,
                 'post_content' => $content,
                 'post_author' => $id_user,
                 'post_parent' => $id_topic,
@@ -245,3 +345,82 @@ if (!function_exists('ctwp_ajax_create_comment')) {
     add_action('wp_ajax_nopriv_ctwp_ajax_create_comment', 'ctwp_ajax_create_comment');
 }
 
+if (!function_exists('ctwp_ajax_Load_comment')) {
+    function ctwp_ajax_Load_comment()
+    {
+        try {
+            if (!$_POST) {
+                return false;
+            }
+            $id_topic = $_POST['id_topic'];
+            if (!$id_topic) {
+                return false;
+            }
+
+            $data = ctwpGetComment($id_topic);
+            $comments = !empty($data) && array_key_exists('data', $data) ? $data['data'] : [];
+            if (!$comments) {
+                return false;
+            }
+
+            foreach ($comments as $comment) {
+                $post_author = get_post_field('post_author', $comment->post_author);
+                $id = $comment->ID;
+                ?>
+                <div id="<?php echo $id ?>" class="inner-item d-flex py-2">
+                    <div class="user-avatar ctwp-mw-40 me-2">
+                        <img class="rounded-circle w-100 " src="<?php echo get_avatar_url($post_author) ?>" alt="">
+                    </div>
+                    <div class="item-content-comment w-100">
+                        <p class="input-item w-100"><?php echo $comment->post_content ?></p>
+                        <div class="topic-action d-flex m-1 ">
+                            <div class="button button-like px-2">like</div>
+                            <div class="button button-reply px-2">reply</div>
+                            <div class="button button-share px-2">share</div>
+                            <div class="time-comment px-2">1h</div>
+                        </div>
+                        <?php
+                        if ($replies = $comment->comment_child) {
+                            foreach ($replies as $reply) {
+                                $post_author = get_post_field('post_author', $reply->post_author);
+                                $id = $reply->ID;
+                                ?>
+                                <div id="<?php echo $id ?>" class="inner-item-replies d-flex py-2">
+                                    <div class="user-avatar ctwp-mw-40 me-2">
+                                        <img class="rounded-circle w-100 "
+                                             src="<?php echo get_avatar_url($post_author) ?>" alt="">
+                                    </div>
+                                    <div class="item-content-comment w-100">
+                                        <p class="input-item w-100"><?php echo $reply->post_content ?></p>
+                                        <div class="topic-action d-flex m-1 ">
+                                            <div class="button button-like px-2">like</div>
+                                            <div class="button button-reply px-2">reply</div>
+                                            <div class="button button-share px-2">share</div>
+                                            <div class="time-comment px-2">1h</div>
+                                        </div>
+                                        <div class="topic-add-comment d-none align-items-center py-2 ">
+                                            <?php echo ctwpGetAddComment_html($id_topic) ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <?php }
+                        } ?>
+                        <div class="topic-add-comment d-none align-items-center py-2 ">
+                            <?php echo ctwpGetAddComment_html($id_topic) ?>
+                        </div>
+                    </div>
+                </div>
+
+            <?php }
+            die();
+
+        } catch (Exception $e) {
+            echo json_encode(0);
+            exit;
+        }
+    }
+
+    add_action('wp_ajax_ctwp_ajax_Load_comment', 'ctwp_ajax_Load_comment');
+    add_action('wp_ajax_nopriv_ctwp_ajax_Load_comment', 'ctwp_ajax_Load_comment');
+}

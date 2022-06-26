@@ -36,18 +36,9 @@ $id_forum = ctwpGetForumByTopicId($idTopic);
                 </div>
             </div>
         </div>
-        <div class="topic-comment d-flex align-items-center py-2">
-            <div class="topic-image ctwp-mw-40 me-2">
-                <img class="rounded-circle w-100 " src="<?php echo get_avatar_url($post_author) ?>" alt="">
-            </div>
-            <div class="content-comment w-100 input-inner d-flex align-items-center">
-                <input type="text" id="content" id_user="<?php ?>" class="input-item w-100 me-2" placeholder="Write a comment..." value="1234567890">
-                <input type="hidden" id="id_user" value="<?php echo ctwpGetCurrentUserId() ?>">
-                <input type="hidden" id="id_topic" value="<?php echo $idTopic ?>">
-                <div class="button <?php echo $is_login ? 'add-comment' : 'is-logout'?> ctwp-mw-40 ctwp-width-40 text-center bg-primary text-white rounded-circle py-2">
-                    <i class="fa-solid fa-location-arrow rotate-45"></i>
-                </div>
-            </div>
+        <div class="topic-comments"></div>
+        <div class="topic-add-comment d-flex align-items-center py-2">
+            <?php echo ctwpGetAddComment_html($idTopic)?>
         </div>
     </div>
 </div>
