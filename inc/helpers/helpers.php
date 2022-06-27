@@ -118,7 +118,6 @@ if (!function_exists('ctwpIsLogin')) {
     {
         $id_user = get_current_user_id();
         if (!$id_user) {
-            echo 'false';
             return false;
         }
         return true;
@@ -150,7 +149,7 @@ if (!function_exists('ctwpGetCommentChild')) {
     {
         $data = array();
         if (!$id_topic && !$id_parent) {
-            return false;
+            return $data;
         }
         $args = [
             'post_type' => 'reply',
@@ -177,7 +176,7 @@ if (!function_exists('ctwpGetComment')) {
     {
         $data = array();
         if (!$id_topic) {
-            return false;
+            return $data;
         }
         $args = [
             'post_type' => 'reply',
@@ -210,30 +209,25 @@ if (!function_exists('ctwpGetComment')) {
     }
 }
 
-if (!function_exists('ctwpGetAddComment_html')) {
-    function ctwpGetAddComment_html($id_topic = '')
+if (!function_exists('ctwpGetTotalComment')) {
+    function ctwpGetTotalComment($id_topic = '')
     {
-        $html = '';
+        $total_comment = 0;
         if (!$id_topic) {
-            return false;
+            return $total_comment;
         }
-        $post_author = get_post_field('post_author', $id_topic);
-        $is_login = ctwpIsLogin();
-        $addclass = $is_login ? 'add-comment' : 'is-logout';
+        $args = [
+            'post_type' => 'reply',
+            'post_status' => 'publish',
+            'post_parent' => $id_topic,
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'posts_per_page' => -1,
 
-
-        $html .= '<div class="user-avatar ctwp-mw-40 me-2">';
-        $html .= '<img class="rounded-circle w-100 " src="' . get_avatar_url($post_author) . '" alt="">';
-        $html .= '</div>';
-        $html .= '<div class="content-comment w-100 input-inner d-flex align-items-center">';
-        $html .= '<input type="text" id="content" class="input-item w-100 me-2" placeholder="Write a comment...">';
-        $html .= '<input type="hidden" id="id_user" value="' . ctwpGetCurrentUserId() . '">';
-        $html .= '<input type="hidden" id="id_topic" value="' . $id_topic . '">';
-        $html .= '<div class="button ' . $addclass . ' ctwp-mw-40 ctwp-width-40 text-center bg-primary text-white rounded-circle py-2">';
-        $html .= '<i class="fa-solid fa-location-arrow rotate-45"></i>';
-        $html .= '</div>';
-        $html .= ' </div>';
-        return $html;
+        ];
+        $query = new WP_Query($args);
+        $total_comment = $query->found_posts;
+        return $total_comment;
     }
 }
 
@@ -312,6 +306,7 @@ if (!function_exists('ctwp_ajax_create_comment')) {
             $id_user = $_POST['id'];
             $content = $_POST['content'];
             $id_topic = $_POST['id_topic'];
+            $reply_to = $_POST['id_reply'] ? $_POST['id_reply'] : '';
             if (!$id_user || !$content || !$id_topic) {
                 return false;
             }
@@ -350,17 +345,20 @@ if (!function_exists('ctwp_ajax_Load_comment')) {
     {
         try {
             if (!$_POST) {
-                return false;
+                echo '';
+                exit;
             }
             $id_topic = $_POST['id_topic'];
             if (!$id_topic) {
-                return false;
+                echo '';
+                exit;
             }
 
             $data = ctwpGetComment($id_topic);
             $comments = !empty($data) && array_key_exists('data', $data) ? $data['data'] : [];
             if (!$comments) {
-                return false;
+                echo '';
+                exit;
             }
 
             foreach ($comments as $comment) {
@@ -394,20 +392,20 @@ if (!function_exists('ctwp_ajax_Load_comment')) {
                                         <p class="input-item w-100"><?php echo $reply->post_content ?></p>
                                         <div class="topic-action d-flex m-1 ">
                                             <div class="button button-like px-2">like</div>
-                                            <div class="button button-reply px-2">reply</div>
+<!--                                            <div class="button button-reply px-2">reply</div>-->
                                             <div class="button button-share px-2">share</div>
                                             <div class="time-comment px-2">1h</div>
                                         </div>
-                                        <div class="topic-add-comment d-none align-items-center py-2 ">
-                                            <?php echo ctwpGetAddComment_html($id_topic) ?>
-                                        </div>
+<!--                                        <div class="topic-add-comment d-none align-items-center py-2 ">-->
+<!--                                            --><?php //echo ctwpGetAddComment_html($id_topic, $id) ?>
+<!--                                        </div>-->
                                     </div>
                                 </div>
 
                             <?php }
                         } ?>
                         <div class="topic-add-comment d-none align-items-center py-2 ">
-                            <?php echo ctwpGetAddComment_html($id_topic) ?>
+                            <?php echo ctwpGetAddComment_html($id_topic, $id) ?>
                         </div>
                     </div>
                 </div>

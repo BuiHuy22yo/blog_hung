@@ -83,6 +83,7 @@
                 let content = button.parent().find('#content').val()
                 let id_user = $('body').find('#id_user').val()
                 let id_topic = $('body').find('#id_topic').val()
+                let id_reply = $(this).find('#id_reply').val()
                 if (!content || !id_user || !id_topic) {
                     return
                 }
@@ -90,7 +91,8 @@
                     'action': 'ctwp_ajax_create_comment',
                     'id': id_user,
                     'content': content,
-                    'id_topic': id_topic
+                    'id_topic': id_topic,
+                    'id_reply': id_reply
                 };
                 $.ajax({
                     url: ctwp_script.ajax_url,
@@ -115,7 +117,6 @@
         handleReplyComment() {
             $('body').on('click', '.button-reply', function (e) {
                 e.preventDefault();
-                console.log('aaaa')
                 let button = $(this)
                 let action_add = button.parent().parent().find(".topic-add-comment")
                 action_add.addClass('d-flex')

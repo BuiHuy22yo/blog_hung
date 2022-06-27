@@ -4,6 +4,7 @@ $idTopic = get_the_id();
 $post_author = get_post_field('post_author', $idTopic);
 $is_login = ctwpIsLogin();
 $id_forum = ctwpGetForumByTopicId($idTopic);
+$total_comment = ctwpGetTotalComment($idTopic);
 ?>
 <div class="col-9">
     <div class="single-detait">
@@ -27,7 +28,9 @@ $id_forum = ctwpGetForumByTopicId($idTopic);
                 <div class="topic-display d-flex py-1">
                     <div class="shows-like me-4 me-auto"><i class="fa-solid fa-thumbs-up me-2 p-1 color-primary-icon rounded-circle bg-primary text-white"></i>5</div>
                     <div class="shows-share me-4">10 Shares</div>
-                    <div class="shows-comment">20 Comments</div>
+                    <?php if($total_comment){?>
+                    <div class="shows-comment"><?php echo $total_comment?> Comments</div>
+                    <?php }?>
                 </div>
                 <div class="topic-action d-flex py-1 my-1 justify-content-around border-b border-t border-color-white">
                     <div class="button button-like ctwp-minwidth-180 text-center py-2 me-4"><i class="fa-regular fa-thumbs-up me-2 color-primary-icon"></i>Like</div>
