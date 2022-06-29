@@ -44,7 +44,7 @@ $idForums = array_shift($idForums);
                         <div class="inner-item row ">
                             <div class="col-9 topic d-flex">
                                 <div class="topic-image ctwp-mw-50 mx-2">
-                                    <img class="w-100" src="<?php echo get_avatar_url($topic->post_author)?>" alt="">
+                                    <img class="w-100" src="<?php echo ctwpGetAvatarUser('avatar', $topic->post_author)?>" alt="">
                                 </div>
                                 <div class="topic-info flex-grow-1">
                                     <div class="topic-title">
@@ -59,12 +59,12 @@ $idForums = array_shift($idForums);
                                 </div>
                                 <div class="cmt">
                                     <i class="fa-regular fa-comment"></i>
-                                    <span class="count">5</span>
+                                    <span class="count"><?php echo ctwpGetTotalComment($topic->ID)?></span>
                                 </div>
                             </div>
                             <div class="col-3 author-reply d-flex">
                                 <div class="author-image ctwp-mw-40">
-                                    <img class="w-100" src="<?php echo get_avatar_url($topic->post_author)?>" alt="">
+                                    <img class="w-100" src="<?php echo ctwpGetAvatarUser('avatar', $topic->post_author)?>" alt="">
                                 </div>
                                 <div class="author-info px-2">
                                     <div class="author-name">mcnb02</div>
@@ -78,39 +78,7 @@ $idForums = array_shift($idForums);
             <?php
         } ?>
     </div>
-
-    <!--//        if (!is_home() && !is_front_page()) { ?>-->
-    <!--            <div class="dev_pagination">-->
-    <!--                --><?php //if ($max_page > 1) { ?>
-    <!--                    <ul class="pagination-nav d-flex justify-content-end">-->
-    <!--                        <li class="page-item -->
-    <?php //echo $class = $data_page == 1 ? 'disabled' : '' ?><!--">-->
-    <!--                            <a class="page-link"-->
-    <!--                               href="?paged=-->
-    <?php //echo $pre_page = $data_page > 1 ? $data_page - 1 : '' ?><!--">-->
-    <!--                                <i class="fa fa-angle-left"></i>-->
-    <!--                            </a>-->
-    <!--                        </li>-->
-    <!--                        --><?php //for ($i = 1; $i <= $max_page; $i++) { ?>
-    <!--                            <li class="page-item -->
-    <?php //echo $class = $data_page == $i ? 'active' : '' ?><!--"><a-->
-    <!--                                    class="page-link" href="?paged=--><?php //echo $i ?><!--">-->
-    <?php //echo $i ?><!--</a></li>-->
-    <!--                        --><?php //} ?>
-    <!--                        <li class="page-item -->
-    <?php //echo $class = $data_page == $max_page ? 'disabled' : '' ?><!--">-->
-    <!--                            <a class="page-link"-->
-    <!--                               href="?paged=-->
-    <?php //echo $next_page = $data_page < $max_page ? $data_page + 1 : '' ?><!--"><i-->
-    <!--                                    class="fa fa-angle-right"></i>-->
-    <!--                            </a>-->
-    <!--                        </li>-->
-    <!--                    </ul>-->
-    <!--                --><?php //} ?>
-    <!--            </div>-->
-    <!--        --><?php //}
-    //    }
-    //?>
+<!--    --><?php //echo ctwpGetPagination_html()?>
 
 
 </div>

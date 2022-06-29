@@ -231,6 +231,20 @@ if (!function_exists('ctwpGetTotalComment')) {
     }
 }
 
+if (!function_exists('ctwpGetAvatarUser')) {
+    function ctwpGetAvatarUser($key ,$author_id = '')
+    {
+        $url = '';
+        if(!$key || !$author_id){
+            return $url;
+        }
+        $avatar_id = get_field($key, 'user_'. $author_id );
+        $url = $avatar_id ? wp_get_attachment_url($avatar_id) : "";
+        return $url;
+
+    }
+}
+
 if (!function_exists('ctwp_ajax_get_topic_by_forum')) {
     function ctwp_ajax_get_topic_by_forum()
     {
@@ -367,7 +381,7 @@ if (!function_exists('ctwp_ajax_Load_comment')) {
                 ?>
                 <div id="<?php echo $id ?>" class="inner-item d-flex py-2">
                     <div class="user-avatar ctwp-mw-40 me-2">
-                        <img class="rounded-circle w-100 " src="<?php echo get_avatar_url($post_author) ?>" alt="">
+                        <img class="rounded-circle w-100 " src="<?php echo ctwpGetAvatarUser('avatar', $post_author)?>" alt="">
                     </div>
                     <div class="item-content-comment w-100">
                         <p class="input-item w-100"><?php echo $comment->post_content ?></p>
@@ -386,19 +400,19 @@ if (!function_exists('ctwp_ajax_Load_comment')) {
                                 <div id="<?php echo $id ?>" class="inner-item-replies d-flex py-2">
                                     <div class="user-avatar ctwp-mw-40 me-2">
                                         <img class="rounded-circle w-100 "
-                                             src="<?php echo get_avatar_url($post_author) ?>" alt="">
+                                             src="<?php echo ctwpGetAvatarUser('avatar', $post_author)?>" alt="">
                                     </div>
                                     <div class="item-content-comment w-100">
                                         <p class="input-item w-100"><?php echo $reply->post_content ?></p>
                                         <div class="topic-action d-flex m-1 ">
                                             <div class="button button-like px-2">like</div>
-<!--                                            <div class="button button-reply px-2">reply</div>-->
+                                            <!--                                            <div class="button button-reply px-2">reply</div>-->
                                             <div class="button button-share px-2">share</div>
                                             <div class="time-comment px-2">1h</div>
                                         </div>
-<!--                                        <div class="topic-add-comment d-none align-items-center py-2 ">-->
-<!--                                            --><?php //echo ctwpGetAddComment_html($id_topic, $id) ?>
-<!--                                        </div>-->
+                                        <!--                                        <div class="topic-add-comment d-none align-items-center py-2 ">-->
+                                        <!--                                            --><?php //echo ctwpGetAddComment_html($id_topic, $id) ?>
+                                        <!--                                        </div>-->
                                     </div>
                                 </div>
 
@@ -421,4 +435,137 @@ if (!function_exists('ctwp_ajax_Load_comment')) {
 
     add_action('wp_ajax_ctwp_ajax_Load_comment', 'ctwp_ajax_Load_comment');
     add_action('wp_ajax_nopriv_ctwp_ajax_Load_comment', 'ctwp_ajax_Load_comment');
+}
+
+
+
+//
+
+if (!function_exists('ctwpGetPagination_html')) {
+    function ctwpGetPagination_html($limit = '', $current_page = '', $date_type = '')
+    {
+        if (!$current_page) {
+            echo '';
+            exit();
+        }
+        $limit = !empty($limit) ? $limit : 10;
+        $current_page = !empty($current_page) ? $current_page : 1;
+//        $data = ctwpGetAllTopicByForum($limit, $current_page);
+        $data = ctwpGetAllTopicByForum();
+        if (!$data) {
+            echo '';
+            exit();
+        }
+        $posts = array_key_exists('data', $data) ? $data['data'] : [];
+        $total = array_key_exists('total', $data) ? $data['total'] : '';
+        $max_page = array_key_exists('max_page', $data) ? $data['max_page'] : '';
+        $current_page = array_key_exists('current_page', $data) ? $data['current_page'] : '';
+        $posts_per_page = array_key_exists('posts_per_page', $data) ? $data['posts_per_page'] : '';
+        if (!$posts || !$total || !$max_page || $current_page || !$posts_per_page) {
+            echo '';
+            exit();
+        }
+        $disable_prev = $current_page == 1 ? 'disable' : '';
+        $disable_next = $current_page == $max_page ? 'disable' : '';
+        ?>
+        <?php if ($total && $limit && $total > $limit) { ?>
+                <div class="pagination">
+                    <ul>
+                        <li class="page-item prev <?php echo $disable_prev ?>">
+                            <?php if ($current_page > 1) { ?>
+                            <span>
+                                <?php } ?>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29"
+                                     fill="none">
+                                    <circle cx="14.5" cy="14.5" r="14" transform="rotate(-180 14.5 14.5)"
+                                            stroke="black"/>
+                                    <path d="M12 22L19.0711 14.9289L12 7.85786" stroke="black" stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                </svg>
+                                <?php if ($current_page > 1) { ?>
+                            </span>
+                        <?php } ?>
+                        </li>
+                        <?php
+                        $last_page = 0;
+                        $next_page = 0;
+                        for ($page = 1; $page <= $max_page; $page++) {
+
+                            if ($page != $max_page && $page > $current_page + 2) {
+                                $last_page = $page == $max_page - 1 ? 1 : 0;
+                                $page_disable = ' page-item-number-disable';
+                            } else if ($page != 1 && $page < $current_page - 2) {
+                                $next_page = $page == 2 ? 1 : 0;
+                                $page_disable = ' page-item-number-disable';
+                            } else {
+                                $last_page = 0;
+                                $next_page = 0;
+                                $page_disable = '';
+                            }
+
+                            $page_active = $current_page == $page ? ' page-item-active' : '';
+                            ?>
+                            <?php if ($next_page === 1) { ?>
+                                <li class="page-item-dots"><span class="page-numbers dots">…</span></li>
+                            <?php } ?>
+                            <?php if ($last_page === 1) { ?>
+                                <li class="page-item-dots"><span class="page-numbers dots ">…</span></li>
+                            <?php } ?>
+                            <li class="page-item page-item-number<?php echo $page_disable ?><?php echo $page_active ?>">
+                                <span><?php echo $page ?></span></li>
+
+                        <?php } ?>
+                        <li class="page-item next <?php echo $disable_next ?>">
+                            <?php if ($current_page < $max_page) { ?>
+                            <span>
+                                <?php } ?>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29"
+                                     fill="none">
+                                    <circle cx="14.5" cy="14.5" r="14" transform="rotate(-180 14.5 14.5)"
+                                            stroke="black"/>
+                                    <path d="M12 22L19.0711 14.9289L12 7.85786" stroke="black" stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                </svg>
+                                <?php if ($current_page < $max_page) { ?>
+                                    </span>
+                        <?php } ?>
+                        </li>
+                    </ul>
+                </div>
+                <input type="hidden" id="limit" value="<?php echo $limit ?>">
+                <input type="hidden" id="current_page" value="<?php echo $current_page ?>">
+                <input type="hidden" id="date_type" value="<?php echo $date_type ?>">
+                <?php
+            } ?>
+        <?php wp_reset_query();
+        die();
+    }
+}
+
+if (!function_exists('ctwp_ajax_archive_pagination')) {
+    function ctwp_ajax_archive_pagination()
+    {
+        try {
+            if (!$_POST) {
+                echo '';
+                exit;
+            }
+            $limit = $_POST['limit'];
+            $current_page = $_POST['current_page'];
+            $date_type = $_POST['date_type'];
+            if (!$date_type || !$current_page || !$limit) {
+                echo '';
+                exit;
+            }
+            ctwpGetArchivePagination_html($limit, $current_page, $date_type);
+            die();
+
+        } catch (Exception $e) {
+            echo '';
+            exit;
+        }
+    }
+
+    add_action('wp_ajax_ctwp_ajax_archive_pagination', 'ctwp_ajax_archive_pagination');
+    add_action('wp_ajax_nopriv_ctwp_ajax_archive_pagination', 'ctwp_ajax_archive_pagination');
 }

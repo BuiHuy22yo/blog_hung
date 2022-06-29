@@ -8,7 +8,7 @@ if (!function_exists('ctwpGetRecentTopic_html')) {
             ?>
             <div class="d-flex py-2">
                 <div class="author-image ctwp-mw-40 mx-2">
-                    <img class="w-100" src="<?php echo get_avatar_url($topic->post_author) ?>" alt="">
+                    <img class="w-100" src="<?php echo ctwpGetAvatarUser('avatar', $topic->post_author)?>" alt="">
                 </div>
                 <div class="topic-info flex-grow-1">
                     <div class="topic-title">
