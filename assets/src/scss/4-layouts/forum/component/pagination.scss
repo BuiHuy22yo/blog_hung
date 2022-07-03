@@ -1,0 +1,14 @@
+.pagination {
+  .page-item {
+    cursor: pointer;
+  }
+
+  .disable {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .page-item-active {
+    color: $color-hover;
+  }
+}
