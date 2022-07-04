@@ -8,7 +8,8 @@
 <?php
 $data = ctwpGetAllTopicByForum();
 $topics = !empty($data) && array_key_exists('data', $data) ? $data['data'] : [];
-$max_page = !empty($data) && array_key_exists('max_page', $data) ? $data['max_page'] : 0;
+$total = !empty($data) && array_key_exists('total', $data) ? $data['total'] : '';
+$max_page = !empty($data) && array_key_exists('max_page', $data) ? $data['max_page'] : '';
 $current_page = !empty($data) && array_key_exists('current_page', $data) ? $data['current_page'] : 0;
 $posts_per_page = !empty($data) && array_key_exists('posts_per_page', $data) ? $data['posts_per_page'] : 10;
 $forums = ctwpGetAllForum(['title']);
@@ -33,7 +34,7 @@ $idForums = array_shift($idForums);
 <div class="col-9">
     <div class="archive-post">
         <div class="archive-post-inner archive-post-pagination">
-            <?php echo ctwpGetPagination_html() ?>
+            <?php echo ctwpGetPagination_html($total, $max_page, $current_page, $posts_per_page) ?>
         </div>
         <div class="archive-post-inner archive-post-list">
             <?php if ($topics) { ?>
@@ -92,7 +93,7 @@ $idForums = array_shift($idForums);
             } ?>
         </div>
         <div class="archive-post-inner archive-post-pagination">
-            <?php echo ctwpGetPagination_html() ?>
+            <?php echo ctwpGetPagination_html($total, $max_page, $current_page, $posts_per_page) ?>
         </div>
     </div>
 </div>

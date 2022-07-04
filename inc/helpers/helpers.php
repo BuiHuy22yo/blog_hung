@@ -232,13 +232,13 @@ if (!function_exists('ctwpGetTotalComment')) {
 }
 
 if (!function_exists('ctwpGetAvatarUser')) {
-    function ctwpGetAvatarUser($key ,$author_id = '')
+    function ctwpGetAvatarUser($key, $author_id = '')
     {
         $url = '';
-        if(!$key || !$author_id){
+        if (!$key || !$author_id) {
             return $url;
         }
-        $avatar_id = get_field($key, 'user_'. $author_id );
+        $avatar_id = get_field($key, 'user_' . $author_id);
         $url = $avatar_id ? wp_get_attachment_url($avatar_id) : "";
         return $url;
 
@@ -248,61 +248,34 @@ if (!function_exists('ctwpGetAvatarUser')) {
 if (!function_exists('ctwp_ajax_get_topic_by_forum')) {
     function ctwp_ajax_get_topic_by_forum()
     {
-        if ($_POST) {
+        try {
+            $html = '';
+            if (!$_POST) {
+                return $html;
+            }
             $id = $_POST['id'];
             $page = $_POST['page'];
-            if ($id && $page) {
-                $data = ctwpGetAllTopicByForum(array($id), $page);
+            if (!$id) {
+                return $html;
             }
-        }
-        if ($data) {
+            $data = ctwpGetAllTopicByForum(array($id), $page);
+            if (!$data) {
+                return $html;
+            }
             $topics = !empty($data) && array_key_exists('data', $data) ? $data['data'] : [];
-            if ($topics) { ?>
-                <?php foreach ($topics as $topic) { ?>
-                    <div class="col-inner inner-body border-b border-color-white py-2">
-                        <div class="inner-item row ">
-                            <div class="col-9 topic d-flex">
-                                <div class="topic-image ctwp-mw-50 mx-2">
-                                    <img class="w-100"
-                                         src="http://localhost:8080/blog_hung/wp-content/uploads/2022/06/peter_morales-wallpaper-1024x1024-1.jpg"
-                                         alt="">
-                                </div>
-                                <div class="topic-info flex-grow-1">
-                                    <div class="topic-title">
-                                        <a class="link-title" href="<?php echo get_the_permalink($topic->ID) ?>">
-                                            <span class="text-title"><?php echo get_the_title($topic->ID) ?></span>
-                                        </a>
-                                    </div>
-                                    <div class="topic-info-inner d-flex">
-                                        <div class="topic-author-name">
-                                            <span>Author: </span><?php echo get_the_author_meta('display_name', $topic->post_author); ?></span>
-                                        </div>
-                                        <div class="topic-create-date">
-                                            <span>Create at: </span><?php echo get_the_date('d/m/Y', $topic->ID) ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="cmt">
-                                    <i class="fa-solid fa-comments"></i>
-                                    <span class="count">5</span>
-                                </div>
-                            </div>
-                            <div class="col-3 author-reply d-flex">
-                                <div class="author-image ctwp-mw-40">
-                                    <img class="w-100"
-                                         src="http://localhost:8080/blog_hung/wp-content/uploads/2022/06/peter_morales-wallpaper-1024x1024-1.jpg"
-                                         alt="">
-                                </div>
-                                <div class="author-info px-2">
-                                    <div class="author-name">mcnb02</div>
-                                    <div class="author-date">01/01/2020</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php } ?>
-            <?php }
-            die();
+            $html = ctwpGetAllTopicByForum_html($topics);
+
+            $total = array_key_exists('total', $data) ? $data['total'] : '';
+            $max_page = array_key_exists('max_page', $data) ? $data['max_page'] : '';
+            $current_page = array_key_exists('current_page', $data) ? $data['current_page'] : 1;
+            $posts_per_page = array_key_exists('posts_per_page', $data) ? $data['posts_per_page'] : 10;
+
+            $pagination = ctwpGetPagination_html($total, $max_page, $current_page, $posts_per_page );
+            echo json_encode(array('data' => $data, 'post' => $html, 'pagination' => $pagination));
+            exit();
+
+        } catch (Exception $e) {
+            return $html;
         }
     }
 
@@ -438,106 +411,6 @@ if (!function_exists('ctwp_ajax_Load_comment')) {
 }
 
 
-
 //
 
-if (!function_exists('ctwpGetPagination_html')) {
-    function ctwpGetPagination_html($next_page = '')
-    {
-        $html = '';
-//        if (!$current_page) {
-//            echo '';
-//            exit();
-//        }
-//        $posts_per_page = !empty($limit) ? $limit : 10;
-        $next_page = !empty($next_page) ? $next_page : 1;
-        $data = ctwpGetAllTopicByForum();
-        if (!$data) {
-            echo '';
-            exit();
-        }
-        $posts = array_key_exists('data', $data) ? $data['data'] : [];
-        $total = array_key_exists('total', $data) ? $data['total'] : '';
-        $max_page = array_key_exists('max_page', $data) ? $data['max_page'] : '';
-        $current_page = array_key_exists('current_page', $data) ? $data['current_page'] : 1;
-        $posts_per_page = array_key_exists('posts_per_page', $data) ? $data['posts_per_page'] : '';
 
-        if (!$posts || !$total || !$max_page || !$current_page || !$posts_per_page) {
-            echo '';
-            exit();
-        }
-        $disable_prev = $current_page == 1 ? 'disable' : '';
-        $disable_next = $current_page == $max_page ? 'disable' : '';
-        if ($total && $posts_per_page && $total > $posts_per_page) {
-            $prev = $current_page - 1 != 0 ? $current_page - 1 : '';
-            $next = $current_page + 1 != $max_page ? $current_page + 1 : '';
-            $html .= ' <div class="pagination d-flex justify-content-center my-4"><ul class="d-flex align-items-center">';
-            $html .= '<li class="page-item prev me-1 '.$disable_prev.'">';
-            $html .= '<span><svg class="rotate-180" xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none"><circle cx="14.5" cy="14.5" r="14" transform="rotate(-180 14.5 14.5)" stroke="black"/><path d="M12 22L19.0711 14.9289L12 7.85786" stroke="black" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
-            $html .= '<input type="hidden" id="next_page" value="'.$prev.'"></li>';
-            $html .= '</li>';
-            $last_page_flag = 0;
-            $next_page_flag = 0;
-            for ($page = 1; $page <= $max_page; $page++) {
-
-                if ($page != $max_page && $page > $current_page + 2) {
-                    $last_page_flag = $page == $max_page - 1 ? 1 : 0;
-                    $page_disable = ' page-item-number-disable';
-                } else if ($page != 1 && $page < $current_page - 2) {
-                    $next_page_flag = $page == 2 ? 1 : 0;
-                    $page_disable = ' page-item-number-disable';
-                } else {
-                    $last_page_flag = 0;
-                    $next_page_flag = 0;
-                    $page_disable = '';
-                }
-
-                $page_active = $current_page == $page ? ' page-item-active' : '';
-                if ($next_page_flag === 1) {
-                    $html .= '<li class="page-item-dots"><span class="page-numbers dots">…</span></li>';
-                }
-                if ($last_page_flag === 1) {
-                    $html .= '<li class="page-item-dots"><span class="page-numbers dots ">…</span></li>';
-                }
-                $html .= '<li class="page-item page-item-number p-1 mx-1'.$page_disable.' '.$page_active .'"><span>'.$page .'</span><input type="hidden" id="next_page" value="'.$page .'"></li>';
-
-            }
-            $html .= '<li class="page-item next ms-1 '.$disable_next.'">';
-            $html .= '<span><svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none"><circle cx="14.5" cy="14.5" r="14" transform="rotate(-180 14.5 14.5)"stroke="black"/><path d="M12 22L19.0711 14.9289L12 7.85786" stroke="black" stroke-linecap="round"stroke-linejoin="round"/></svg></span>';
-            $html .= '<input type="hidden" id="next_page" value="'.$next.'"></li>';
-            $html .= '</li>';
-            $html .= '<input type="hidden" id="current_page" value="'.$current_page.'">';
-            $html .= '</ul></div>';
-        }
-
-        $html .= '</div>';
-        return $html;
-    }
-}
-
-if (!function_exists('ctwp_ajax_archive_pagination')) {
-    function ctwp_ajax_archive_pagination()
-    {
-        try {
-            if (!$_POST) {
-                echo '';
-                exit;
-            }
-            $limit = $_POST['limit'];
-            $current_page = $_POST['current_page'];
-            if (!$current_page || !$limit) {
-                echo '';
-                exit;
-            }
-            ctwpGetArchivePagination_html($limit, $current_page);
-            die();
-
-        } catch (Exception $e) {
-            echo '';
-            exit;
-        }
-    }
-
-    add_action('wp_ajax_ctwp_ajax_archive_pagination', 'ctwp_ajax_archive_pagination');
-    add_action('wp_ajax_nopriv_ctwp_ajax_archive_pagination', 'ctwp_ajax_archive_pagination');
-}
