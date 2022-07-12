@@ -20,22 +20,11 @@ if ( ! defined( 'CTWP_LIBRARY' ) ) {
     define( 'CTWP_LIBRARY', untrailingslashit( get_template_directory_uri() ) . '//assets/src/library' );
 }
 
-require_once CTWP_DIR_PATH . '/inc/libs/class-html-compression.php';
-require_once CTWP_DIR_PATH . '/inc/helpers/autoloader.php';
-require_once CTWP_DIR_PATH . '/inc/helpers/template-tags.php';
-require_once CTWP_DIR_PATH . '/inc/helpers/acf-config.php';
-require_once CTWP_DIR_PATH . '/inc/helpers/resize.php';
-require_once CTWP_DIR_PATH . '/inc/helpers/components.php';
-require_once CTWP_DIR_PATH . '/inc/helpers/nav.php';
-require_once CTWP_DIR_PATH . '/inc/helpers/helpers.php';
-require_once CTWP_DIR_PATH . '/inc/helpers/breadcrumb.php';
-require_once CTWP_DIR_PATH . '/inc/helpers/banner.php';
+require_once CTWP_DIR_PATH . '/inc/helpers/init.php';
 
 //
-require_once CTWP_DIR_PATH . '/template-parts/global/module/recent_post.php';
-require_once CTWP_DIR_PATH . '/template-parts/global/module/comment.php';
-require_once CTWP_DIR_PATH . '/template-parts/global/module/post.php';
-require_once CTWP_DIR_PATH . '/template-parts/global/module/pagination.php';
+require_once CTWP_DIR_PATH . '/template-parts/global/module/index.php';
+
 
 
 function ctwp_get_theme_instance() {
