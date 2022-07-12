@@ -62,7 +62,9 @@ class Header {
         <div class="container">
             <div class="header-inner-top d-flex justify-content-end p-2 ">
                 <div class="search pe-3"><?php echo 'search' ?></div>
-                <div class="account ps-3"><?php echo 'login/sign in' ?></div>
+                <div class="account ps-3">
+                    <a href="<?php echo site_url('/login/')?>" class="login">Login</a>/<a href="<?php echo site_url('/sign_in')?>" class="sign_in">Sign in</a>
+                </div>
             </div>
         </div>
         </div>
