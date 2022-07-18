@@ -91,12 +91,13 @@ if (!function_exists('ctwp_ajax_get_topic_by_forum')) {
             if (!$_POST) {
                 return $html;
             }
+            $user_id = ctwpGetCurrentUserId();
             $id = $_POST['id'];
             $page = $_POST['page'];
-            if (!$id) {
+            if (!$id && !$user_id) {
                 return $html;
             }
-            $data = ctwpGetAllTopicByForum(array($id), $page);
+            $data = ctwpGetAllTopicByForum(array($id), $page,$user_id);
             if (!$data) {
                 return $html;
             }

@@ -1,12 +1,13 @@
 <?php
 /**
- * Archive List
+ * Home List
  *
  * @package ctwp
  */
 ?>
 <?php
-$data = ctwpGetAllTopicByForum();
+$user_id = ctwpGetCurrentUserId();
+$data = ctwpGetAllTopicByForum(array(),1,$user_id);
 $topics = !empty($data) && array_key_exists('data', $data) ? $data['data'] : [];
 $total = !empty($data) && array_key_exists('total', $data) ? $data['total'] : '';
 $max_page = !empty($data) && array_key_exists('max_page', $data) ? $data['max_page'] : '';
@@ -18,13 +19,8 @@ $idForums = array_shift($idForums);
 
 ?>
 
-
-<div class="col-9">
-    <div class="archive-post">
-        <div class="post-pagination archive-post-inner archive-post-pagination">
-            <?php echo ctwpGetPagination_html($total, $max_page, $current_page, $posts_per_page) ?>
-        </div>
-        <div class="archive-post-inner archive-post-list">
+    <div class="admin-post">
+        <div class="admin-post-inner admin-post-list">
             <?php if ($topics) { ?>
                 <article <?php post_class('post-forum-topic border border-color-white'); ?>>
                     <div class="col-inner inner-head border-b border-color-white py-2">
@@ -84,21 +80,8 @@ $idForums = array_shift($idForums);
                 <?php
             } ?>
         </div>
-        <div class="post-pagination archive-post-inner archive-post-pagination">
+        <div class="post-pagination admin-post-inner admin-post-pagination">
             <?php echo ctwpGetPagination_html($total, $max_page, $current_page, $posts_per_page) ?>
         </div>
     </div>
-</div>
-<div class="col-3" >
-    <div class="list-forum pt-2">
-        <?php if ($forums) { ?>
-            <?php
-            foreach ($forums as $id => $forum) {?>
-                <div class="item-wrap pt-2">
-                    <input type="checkbox" id="checkmate-<?php echo $id ?>" name="checkmate" value="<?php echo $id?>" <?php  echo $idForums == $id ? 'checked' : ''; ?> >
-                    <label for="checkmate-<?php echo $id ?>"> <?php echo $forum ?></label><br>
-                </div>
-            <?php } ?>
-        <?php } ?>
-    </div>
-</div>
+

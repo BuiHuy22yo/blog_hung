@@ -34,13 +34,16 @@ if (!function_exists('ctwpGetAllTopicByForum_html')) {
             $html .= '</div>';
             $html .= '</div>';
             $html .= '<div class="col-3 author-reply d-flex">';
-            $html .= '<div class="author-image ctwp-mw-40">';
-            $html .= '<img class="w-100"src="' . ctwpGetAvatarUser('avatar', $topic->post_author) . '"alt="">';
-            $html .= '</div>';
-            $html .= '<div class="author-info px-2">';
-            $html .= '<div class="author-name">mcnb02</div>';
-            $html .= '<div class="author-date">01/01/2020</div>';
-            $html .= '</div>';
+            if(ctwpGetTotalComment($topic->ID) > 0) {
+                $topicNewComment = ctwpGetCommentNew($topic->ID);
+                $html .= '<div class="author-image ctwp-mw-40">';
+                $html .= '<img class="w-100"src="' . ctwpGetAvatarUser('avatar', $topicNewComment->post_author) . '"alt="">';
+                $html .= '</div>';
+                $html .= '<div class="author-info px-2">';
+                $html .= '<div class="author-name">'.get_the_author_meta('display_name', $topicNewComment->post_author).'</div>';
+                $html .= '<div class="author-date">'.get_the_date('d/m/Y', $topicNewComment->ID).'</div>';
+                $html .= '</div>';
+            }
             $html .= '</div>';
             $html .= '</div>';
             $html .= '</div>';

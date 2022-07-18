@@ -26,7 +26,7 @@
 
     function funcGetPost(id_forum = undefined, $current_page = 1) {
         if (!id_forum) {
-            return;
+            id_forum = '';
         }
         let data = {
             'action': 'ctwp_ajax_get_topic_by_forum',
@@ -43,7 +43,6 @@
             },
             success: function (data) {
                 // $('.post-forum').removeClass('loading');
-                console.log(data.data)
                 if (!data) {
                     return;
                 }
@@ -56,7 +55,7 @@
                 if (data.pagination) {
                     setTimeout(function () {
                         $('.pagination').remove();
-                        $('body').find('.archive-post-pagination').append(data.pagination)
+                        $('body').find('.post-pagination').append(data.pagination)
                     }, 500);
                 }
                 $('body').scrollTop(0)
@@ -96,6 +95,7 @@
         TopicPagination() {
             $('body').on('click', '.page-item', function (e) {
                 let id_forum = $('.item-wrap').find('input[type=checkbox]:checked').val()
+                id_forum = id_forum ? id_forum : ''
                 let next_page = $(this).find('#next_page').val()
                 funcGetPost(id_forum, next_page)
             });

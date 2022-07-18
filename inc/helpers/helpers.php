@@ -58,9 +58,10 @@ if (!function_exists('ctwpGetForumNew')) {
 }
 
 if (!function_exists('ctwpGetAllTopicByForum')) {
-    function ctwpGetAllTopicByForum($forumId = array(), $current_page = 1)
+    function ctwpGetAllTopicByForum($forumId = array(), $current_page = 1, $user_id = '')
     {
         $data = array();
+
         $forumId = !empty($forumId) ? $forumId : ctwpGetForumNew();
         $current_page = !empty($current_page) ? $current_page : 1;
         $posts_per_page = get_option('posts_per_page') ? get_option('posts_per_page') : -1;
@@ -70,9 +71,13 @@ if (!function_exists('ctwpGetAllTopicByForum')) {
             'orderby' => 'date',
             'order' => 'DESC',
             'paged' => $current_page,
-            'post_parent__in' => $forumId,
             'posts_per_page' => $posts_per_page,
         ];
+        if($user_id){
+            $args['author'] = $user_id;
+        }else {
+            $args['post_parent__in'] = $forumId;
+        }
         $query = new WP_Query($args);
         $total = $query->found_posts;
         $max_page = $query->max_num_pages;
@@ -242,6 +247,35 @@ if (!function_exists('ctwpGetAvatarUser')) {
         $url = $avatar_id ? wp_get_attachment_url($avatar_id) : "";
         return $url;
 
+    }
+}
+
+if (!function_exists('ctwpGetCommentNew')) {
+    function ctwpGetCommentNew($id_topic = '')
+    {
+
+        $data = array();
+        if (!$id_topic) {
+            return $data;
+        }
+        $args = [
+            'post_type' => 'reply',
+            'post_status' => 'publish',
+            'post_parent' => $id_topic,
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'posts_per_page' => 1,
+
+        ];
+        $query = new WP_Query($args);
+        if ($query->have_posts()) {
+            foreach ($query->posts as $post) {
+                $data = $post;
+            }
+
+            wp_reset_postdata();
+        }
+        return $data;
     }
 }
 

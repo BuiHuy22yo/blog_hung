@@ -11,4 +11,10 @@
   .page-item-active {
     color: $color-hover;
   }
+  .page-item-dots {
+    display: none;
+    @media (max-width: 767px) {
+      //display: block;
+    }
+  }
 }
